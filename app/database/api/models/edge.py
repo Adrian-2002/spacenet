@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import declared_attr
 from ..database import Base
 
 
@@ -22,13 +23,17 @@ class SurfaceEdge(Edge):
 
 
 class SpaceEdge(Edge):
-    duration = Column(Float)
+    @declared_attr
+    def duration(cls):
+        return Edge.__table__.c.get("duration", Column(Float))
 
     __mapper_args__ = {"polymorphic_identity": "space"}
 
 
 class FlightEdge(Edge):
-    duration = Column(Float)
+    @declared_attr
+    def duration(cls):
+        return Edge.__table__.c.get("duration", Column(Float))
     max_crew = Column(Float)
     max_cargo = Column(Float)
 
